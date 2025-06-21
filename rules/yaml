@@ -1,0 +1,6 @@
+```json
+{
+  "rule_name": "DCSync_Suspicious_Replication",
+  "eql_query": "sequence by winlog.event_data.SubjectUserName\n  [winlog where event.code == \"4662\" and winlog.event_data.Properties : \"*Replicating Directory Changes All*\" and winlog.event_data.Properties : \"*1131f6ad-9c07-11d1-f79f-00c04fc2dcd2*\" and winlog.event_data.Properties : \"*1131f6aa-9c07-11d1-f79f-00c04fc2dcd2*\" and winlog.event_data.Properties : \"*9923a32a-3607-11d2-b9be-0000f87a36b2*\" and winlog.event_data.Properties : \"*89e95b76-444d-4c62-991a-0facbeda640c*\" and winlog.event_data.AccessMask == \"0x100\"]\n  [not winlog where winlog.event_data.SubjectDomainName == \"Window Manager\"]\n  [not winlog where winlog.event_data.SubjectUserName : (\"NT AUT*\", \"MSOL_*\")]\n  [not winlog where winlog.event_data.SubjectUserName : \"*$*\" ]"
+}
+```
