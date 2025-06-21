@@ -1,0 +1,17 @@
+sequence by Event.process.entity_id
+  [winlog.event]{
+    winlog.event.event_id : "4662" and
+    /*TRANSLATION_LIMITATION: Sigma 'contains' translates to 'any of' for multiple values. Need to verify the field Properties in Elastic SIEM for precise matching.*/
+    any of (winlog.event.event_data.Properties) in (
+      "Replicating Directory Changes All",
+      "1131f6ad-9c07-11d1-f79f-00c04fc2dcd2",
+      "1131f6aa-9c07-11d1-f79f-00c04fc2dcd2",
+      "9923a32a-3607-11d2-b9be-0000f87a36b2",
+      "89e95b76-444d-4c62-991a-0facbeda640c"
+    ) and
+    winlog.event.event_data.AccessMask : "0x100" and
+    not (winlog.event.event_data.SubjectDomainName : "Window Manager" or
+         startswith(winlog.event.event_data.SubjectUserName, "NT AUT") or
+         startswith(winlog.event.event_data.SubjectUserName, "MSOL_") or
+         endswith(winlog.event.event_data.SubjectUserName, "$"))
+  }
