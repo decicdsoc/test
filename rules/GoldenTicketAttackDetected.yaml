@@ -1,0 +1,27 @@
+```yaml
+name: GoldenTicketAttackDetected
+description: Detects potential Golden Ticket attacks based on specific Kerberos TGT request characteristics.
+risk_score: 81
+rule_id: 611eab06-a145-4dfa-a295-3ccc5c20f59a
+severity: high
+type: eql
+query: |
+  sequence by winlog.event_data.SubjectUserName with maxspan=1m
+  [authentication where event.category == "authentication" and event.type == "start" and
+   winlog.event_id == "4769" and
+   winlog.event_data.TicketOptions == "0x40810000" and
+   winlog.event_data.ServiceName == "krbtgt"
+  ]
+references:
+  - https://www.example.com/golden_ticket_attack_info
+tags:
+  - attack.golden_ticket
+  - attack.kerberos
+  - attack.ticket_forgery
+false_positives:
+  - Legitimate Kerberos ticket requests by authorized users.
+threat:
+  - tactic: "Credential Access"
+    technique: "Kerberos Ticket Abuse"
+    subtechnique: "Golden Ticket"
+```
