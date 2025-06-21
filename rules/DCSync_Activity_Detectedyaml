@@ -1,0 +1,37 @@
+```yaml
+rule_name: DCSync_Activity_Detected
+
+query: |
+  sequence by host.id, user.id
+    [process where event.category == "process" and event.type == "start" and
+      process.name : "lsass.exe" and
+      process.args : "Replicating Directory Changes All" and
+      process.args : ("1131f6ad-9c07-11d1-f79f-00c04fc2dcd2", "1131f6aa-9c07-11d1-f79f-00c04fc2dcd2", "9923a32a-3607-11d2-b9be-0000f87a36b2", "89e95b76-444d-4c62-991a-0facbeda640c") and
+      process.args : "0x100" and not (process.parent.name : "Window Manager" or process.parent.name : "dwm.exe") and not (user.name : ("NT AUTHORITY\\SYSTEM", "MSOL_*"))]
+    [network where event.category == "network" and event.type == "connection" and
+      destination.port == 389 and network.direction == "outgoing"]
+
+risk_score: 75
+
+severity: high
+
+threat:
+  - name: DCSync Attack
+    tactic: Credential Access
+    technique: OS Credential Dumping
+
+false_positives:
+  - Legitimate replication and synchronization activities
+
+description: Detects potential DCSync activity based on process arguments associated with directory replication changes.
+
+tags:
+  - attack.credential_access
+  - attack.s0002
+  - attack.t1003.006
+
+references:
+  - https://blog.blacklanternsecurity.com/p/detecting-dcsync?s=r
+  - https://docs.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4662
+  - https://attack.mitre.org/techniques/T1003/006/
+```
