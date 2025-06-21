@@ -1,0 +1,6 @@
+```json
+{
+  "rule_name": "DCSync_Suspicious_Replication",
+  "eql_query": "sequence by host.id with maxspan=5m\n  [process where event.type == \"start\" and process.name : \"lsass.exe\"]\n  [windows.event where event.code == \"4662\" and winlog.event_data.Properties : (\"Replicating Directory Changes All\", \"1131f6ad-9c07-11d1-f79f-00c04fc2dcd2\", \"1131f6aa-9c07-11d1-f79f-00c04fc2dcd2\", \"9923a32a-3607-11d2-b9be-0000f87a36b2\", \"89e95b76-444d-4c62-991a-0facbeda640c\") and winlog.event_data.AccessMask == \"0x100\" and not (winlog.event_data.SubjectDomainName == \"Window Manager\" or winlog.event_data.SubjectUserName : (\"NT AUT*\", \"MSOL_*\") or winlog.event_data.SubjectUserName : \"*$ \")]"
+}
+```
