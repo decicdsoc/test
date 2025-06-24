@@ -1,0 +1,3 @@
+```
+((process.executable : "*wscript.exe" or process.executable : "*cscript.exe") and process.command_line : ("*powershell*") and not (process.parent.name : ("excel.exe", "winword.exe", "outlook.exe", "msaccess.exe", "powerpnt.exe")))
+```
