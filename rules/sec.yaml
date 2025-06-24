@@ -1,0 +1,82 @@
+```
+title: Suspicious Program Started From Removable Drive
+id: 99fd2485-5541-4a5a-8b10-98ca4599b547
+status: experimental
+description: Detects execution of programs from removable drives
+references:
+    - https://thedfirreport.com/2022/04/18/icedid-command-and-control-via-compromised-wordpress/
+author: Florian Roth (Nextron Systems)
+date: 2023/03/23
+tags:
+    - attack.initial_access
+    - attack.t1566.001
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_img:
+        process.executable :
+            - 'A:\\*.exe'
+            - 'B:\\*.exe'
+            - 'C:\\*.exe'
+            - 'D:\\*.exe'
+            - 'E:\\*.exe'
+            - 'F:\\*.exe'
+            - 'G:\\*.exe'
+            - 'H:\\*.exe'
+            - 'I:\\*.exe'
+            - 'J:\\*.exe'
+            - 'K:\\*.exe'
+            - 'L:\\*.exe'
+            - 'M:\\*.exe'
+            - 'N:\\*.exe'
+            - 'O:\\*.exe'
+            - 'P:\\*.exe'
+            - 'Q:\\*.exe'
+            - 'R:\\*.exe'
+            - 'S:\\*.exe'
+            - 'T:\\*.exe'
+            - 'U:\\*.exe'
+            - 'V:\\*.exe'
+            - 'W:\\*.exe'
+            - 'X:\\*.exe'
+            - 'Y:\\*.exe'
+            - 'Z:\\*.exe'
+    selection_cli:
+        process.command_line :
+            - 'A:\\*.exe*'
+            - 'B:\\*.exe*'
+            - 'C:\\*.exe*'
+            - 'D:\\*.exe*'
+            - 'E:\\*.exe*'
+            - 'F:\\*.exe*'
+            - 'G:\\*.exe*'
+            - 'H:\\*.exe*'
+            - 'I:\\*.exe*'
+            - 'J:\\*.exe*'
+            - 'K:\\*.exe*'
+            - 'L:\\*.exe*'
+            - 'M:\\*.exe*'
+            - 'N:\\*.exe*'
+            - 'O:\\*.exe*'
+            - 'P:\\*.exe*'
+            - 'Q:\\*.exe*'
+            - 'R:\\*.exe*'
+            - 'S:\\*.exe*'
+            - 'T:\\*.exe*'
+            - 'U:\\*.exe*'
+            - 'V:\\*.exe*'
+            - 'W:\\*.exe*'
+            - 'X:\\*.exe*'
+            - 'Y:\\*.exe*'
+            - 'Z:\\*.exe*'
+    filter_program_files:
+        process.parent.name :
+            - 'explorer.exe'
+            - 'cmd.exe'
+            - 'powershell.exe'
+            - 'pwsh.exe'
+    filter_signed:
+        process.signature.status : 'verified'
+    condition: selection_img and not filter_program_files and not filter_signed or selection_cli and not filter_program_files and not filter_signed
+```
